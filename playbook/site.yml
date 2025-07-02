@@ -1,0 +1,128 @@
+- name: Set timezone to Europe/Moscow
+  hosts: all
+  become: true
+  tasks:
+    - name: Ensure timezone is set
+      ansible.builtin.timezone:
+        name: Europe/Moscow
+
+- name: Install and configure LightHouse
+  hosts: lighthouse
+  become: true
+  roles:
+    - lighthouse
+
+- name: Install Vector via role
+  hosts: vector:lighthouse
+  become: true
+  roles:
+    - vector
+
+- name: Install Clickhouse via role
+  hosts: clickhouse
+  become: true
+  roles:
+    - ansible-clickhouse
+
+
+
+
+- name: Clickhouse database and table for logs
+  hosts: clickhouse
+  become: true
+  tasks:
+    #- name: Remove conflicting ClickHouse config.d file if exists
+    #  file:
+    #   path: /etc/clickhouse-server/config.d/config.xml
+    #   state: absent
+
+
+    - name: Copy ClickHouse configuration file
+      template:
+        src: templates/clickhouse_server_config.j2
+        dest: /etc/clickhouse-server/config.xml
+        owner: clickhouse
+        group: clickhouse
+        mode: '0644'
+      notify: Restart ClickHouse
+
+    - name: Copy ClickHouse user configuration file
+      template:
+        src: templates/clickhouse_server_users.j2
+        dest: /etc/clickhouse-server/user.xml
+        owner: clickhouse
+        group: clickhouse
+        mode: '0644'
+      notify: Restart ClickHouse
+
+    - name: Enable read-write mode in ClickHouse
+      ansible.builtin.lineinfile:
+        path: /etc/clickhouse-server/users.xml
+        regexp: '<readonly>.*</readonly>'
+        line: '        <readonly>0</readonly>'
+      become: yes
+      notify: Restart ClickHouse
+
+    - name: Disable users.d/users.xml to avoid conflict with user.xml
+      become: true
+      command: mv /etc/clickhouse-server/users.d/users.xml /etc/clickhouse-server/users.d/users.xml.disabled
+      args:
+        creates: /etc/clickhouse-server/users.d/users.xml.disabled
+      notify: Restart ClickHouse
+
+    
+    - name: Comment out 127.0.0.1 listen_host in config.d/config.xml
+      become: true
+      lineinfile:
+        path: /etc/clickhouse-server/config.d/config.xml
+        regexp: '^\s*<listen_host>127\.0\.0\.1</listen_host>'
+        line: '    <!-- <listen_host>0.0.0.0</listen_host> -->'
+        backup: yes
+      notify: Restart ClickHouse
+
+    - name: Ensure ClickHouse service is enabled and started
+      systemd:
+        name: clickhouse-server
+        enabled: true
+        state: started
+
+     
+    - name: Create ClickHouse database and table for logs
+      shell: |
+        clickhouse-client --query="CREATE DATABASE IF NOT EXISTS logs;"
+        clickhouse-client --query="CREATE TABLE IF NOT EXISTS logs.vector_logs (timestamp DateTime DEFAULT now(),
+          host String,
+          log_type String,
+          message String
+        ) ENGINE = MergeTree()
+        ORDER BY timestamp;"
+      args:
+        executable: /bin/bash
+      register: create_db_result
+      changed_when: "'Exception' not in create_db_result.stderr"
+  handlers:
+    - name: Restart ClickHouse
+      systemd:
+        name: clickhouse-server
+        state: restarted
+
+- name: Check ClickHouse availability and show Lighthouse URLлностью рабочие конфиги
+  hosts: lighthouse-03
+  gather_facts: true
+  tasks:
+    - name: Check ClickHouse availability
+      uri:
+        url: "http://{{ hostvars['lighthouse-03'].ansible_host }}?user=default"
+        return_content: true
+      register: clickhouse_response
+      ignore_errors: true
+
+- name: Show Lighthouse URL if ClickHouse is available
+  hosts: lighthouse
+  become: false
+  tasks:
+    - name: Debug output
+      ansible.builtin.debug:
+        msg: >
+          Lighthouse is available at:
+          http://{{ hostvars['lighthouse-03'].ansible_host }}?user=default#http://{{ hostvars['clickhouse-01'].ansible_host }}:8123

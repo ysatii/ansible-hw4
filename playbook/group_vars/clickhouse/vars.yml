@@ -1,0 +1,8 @@
+---
+clickhouse_version: "23.8.2.7"
+clickhouse_packages:
+  - clickhouse-client
+  - clickhouse-server
+  - clickhouse-common-static
+
+download_dir: "/home/{{ ansible_user }}/clickhouse"  # куда скачивать RPM

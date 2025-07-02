@@ -1,0 +1,56 @@
+---
+    - name: Ensure ClickHouse download directory exists
+      file:
+        path: "{{ download_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Get ClickHouse RPM packages
+      get_url:
+        url: "https://packages.clickhouse.com/rpm/stable/{{ item }}-{{ clickhouse_version }}.x86_64.rpm"
+        dest: "{{ download_dir }}/{{ item }}-{{ clickhouse_version }}.rpm"
+        mode: "0644"
+      with_items:
+        - clickhouse-client
+        - clickhouse-server
+        - clickhouse-common-static
+
+    - name: Install ClickHouse packages
+      yum:
+        name:
+          - "{{ download_dir }}/clickhouse-client-{{ clickhouse_version }}.rpm"
+          - "{{ download_dir }}/clickhouse-server-{{ clickhouse_version }}.rpm"
+          - "{{ download_dir }}/clickhouse-common-static-{{ clickhouse_version }}.rpm"
+        state: present
+
+    - name: Copy ClickHouse configuration file
+      template:
+        src: clickhouse_server_config.j2
+        dest: /etc/clickhouse-server/config.xml
+        owner: clickhouse
+        group: clickhouse
+        mode: '0644'
+      notify: Restart ClickHouse
+
+    - name: Copy ClickHouse user configuration file
+      template:
+        src: clickhouse_server_users.j2
+        dest: /etc/clickhouse-server/user.xml
+        owner: clickhouse
+        group: clickhouse
+        mode: '0644'
+      notify: Restart ClickHouse
+
+    - name: Enable read-write mode in ClickHouse
+      ansible.builtin.lineinfile:
+        path: /etc/clickhouse-server/users.xml
+        regexp: '<readonly>.*</readonly>'
+        line: '        <readonly>0</readonly>'
+      become: yes
+      notify: Restart ClickHouse
+
+    - name: Ensure ClickHouse service is enabled and started
+      systemd:
+        name: clickhouse-server
+        enabled: true
+        state: started
