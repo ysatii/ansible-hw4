@@ -1,38 +1,39 @@
-Role Name
-=========
+# Ansible Роль: lighthouse-role
 
-A brief description of the role goes here.
+Эта роль устанавливает и настраивает [Lighthouse](https://github.com/VKCOM/lighthouse) — веб-интерфейс для визуализации запросов к ClickHouse.
 
-Requirements
-------------
+##  Возможности
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Устанавливает Nginx и необходимые пакеты
+- Загружает Lighthouse с GitHub
+- Распаковывает и размещает файлы в каталоге Nginx
+- Создаёт конфигурацию Nginx для доступа к Lighthouse
+- Запускает и включает службу `nginx`
 
-Role Variables
---------------
+##  Пример использования
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+```yaml
+- hosts: web
+  become: true
+  roles:
+    - role: lighthouse-role
+```
 
-Dependencies
-------------
+##  Конфигурация
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+Nginx настраивается на:
 
-Example Playbook
-----------------
+- Прослушивание порта `80`
+- Обслуживание содержимого из `/usr/share/nginx/html/lighthouse-master/`
+- Поддержку SPA (одностраничного приложения) через fallback на `index.html`
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Дополнительные переменные не требуются — все пути и параметры заданы по умолчанию.
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+##  Требования
 
-License
--------
+- ОС на базе RHEL/CentOS с `yum` и доступом к `epel-release`
+- root-доступ или `become: true`
 
-BSD
+##  Лицензия
 
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+MIT

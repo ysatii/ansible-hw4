@@ -75,12 +75,19 @@ ansible-playbook -i inventory/prod.yml site.yml
 данные продолжают поступапать при обновлениии страниицы 
 ![рисунок 4](https://github.com/ysatii/ansible-hw4/blob/main/img/img_4.jpg)
 
-будут установлены clickhouse, lighthouse, vector 
+Будут установлены clickhouse, lighthouse, vector 
 клинет vector будет установлен на две машины  
 - **lighthouse** - получаем данные о запросах к nginx, 
--  **vector** - получаем данные о работе сервера **vector**
+-  **vector** - получаем данные о работе сервера **vector**  
 на машину вектор будет установлен сервер **vector**
 
+создадим **vector-role** в гит репозитории и протегеруем! переместим туда файлы и описание роли
+![рисунок 5](https://github.com/ysatii/ansible-hw4/blob/main/img/img_5.jpg)
+роль доступна  по адресу  https://github.com/ysatii/vector-role
+
+создадим роль **lighthouse-role** в гит репозитории и протегеруем! переместим туда файлы и описание роли
+![рисунок 5](https://github.com/ysatii/ansible-hw4/blob/main/img/img_5.jpg)
+роль доступна  по адресу  https://github.com/ysatii/lighthouse-role
 
 
 

@@ -1,38 +1,51 @@
-Role Name
-=========
+# Ansible Роль: vector-role
 
-A brief description of the role goes here.
+Данная роль устанавливает и настраивает [Vector](https://vector.dev) — высокопроизводительный инструмент для сбора, трансформации и отправки логов.
 
-Requirements
-------------
+##  Возможности
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Создаёт системного пользователя `vector`
+- Загружает и устанавливает бинарный файл Vector
+- Создаёт необходимые директории
+- Разворачивает конфигурационный файл через шаблон
+- Обеспечивает исполняемость и установку в систему
 
-Role Variables
---------------
+##  Переменные роли
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Вы можете переопределить переменные в инвентаре или playbook-е.
 
-Dependencies
-------------
+### Из `defaults/main.yml`
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+```yaml
+vector_download_url: "https://packages.timber.io/vector/latest/vector-x86_64-unknown-linux-gnu.tar.gz"
+vector_install_path: "/usr/local/bin/vector"
+vector_config_file: "/etc/vector/vector.toml"
+```
 
-Example Playbook
-----------------
+### Из `vars/main.yml`
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+```yaml
+vector_user: "vector"
+```
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+##  Пример использования
 
-License
--------
+```yaml
+- hosts: all
+  roles:
+    - role: vector-role
+```
 
-BSD
+##  Шаблоны
 
-Author Information
-------------------
+Роль ожидает наличие Jinja2-шаблона `vector_vector.toml.j2`, используемого для генерации конфигурации Vector.
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+##  Требования
+
+- Linux
+- root-доступ или `become: true`
+- Ansible-модули: `get_url`, `unarchive`, `template`, `file`, `user`
+
+##  Лицензия
+
+MIT
