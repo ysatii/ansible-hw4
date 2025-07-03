@@ -89,7 +89,7 @@ ansible-playbook -i inventory/prod.yml site.yml
 ![рисунок 5](https://github.com/ysatii/ansible-hw4/blob/main/img/img_5.jpg)
 роль доступна  по адресу  https://github.com/ysatii/lighthouse-role
 
-
+репозиторий с рабочим плайбук  https://github.com/ysatii/ansible-hw4/tree/main/playbook 
 
 
 
