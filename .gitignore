@@ -1,6 +1,10 @@
 # Игнорируем папку с SSH-ключами
 ssh_env/
 playbook/ssh_env/
+clickhouse/
+lighthouse/
+vector/
+
 
 # Игнорируем временные файлы Ansible
 *.retry
@@ -9,4 +13,5 @@ playbook/ssh_env/
 __pycache__/
 *.pyc
 *.pyo
+
 

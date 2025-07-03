@@ -54,7 +54,12 @@ mv roles/clickhouse roles/clickhouse-role
 ansible-galaxy role init roles/vector-role
 ansible-galaxy role init roles/lighthouse-role
 
-потом из папки /Рабочий стол/ansible-hw4/
+из папки  ansible-hw4/ansible-hw4/playbook/
+
+командой ansible-playbook -i inventory/prod.yml site.yml
+Начнеться выплнение пайл-план!
+будут установлены 
+
 
 
 

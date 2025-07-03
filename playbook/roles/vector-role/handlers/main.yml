@@ -1,2 +1,6 @@
+#  (обработчик для перезапуска)
 ---
-# handlers file for roles/vector-role
+- name: Restart Vector
+  systemd:
+    name: vector
+    state: restarted

@@ -10,13 +10,13 @@
   hosts: lighthouse
   become: true
   roles:
-    - lighthouse
+    - lighthouse-role
 
 - name: Install Vector via role
   hosts: vector:lighthouse
   become: true
   roles:
-    - vector
+    - vector-role
 
 - name: Install Clickhouse via role
   hosts: clickhouse
@@ -100,6 +100,7 @@
         executable: /bin/bash
       register: create_db_result
       changed_when: "'Exception' not in create_db_result.stderr"
+      
   handlers:
     - name: Restart ClickHouse
       systemd:
