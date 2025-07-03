@@ -46,19 +46,31 @@
 ---
 
 ## Решение
-скачиваем роль 
-ansible-galaxy install -r requirements.yml -p ./roles
-mv roles/clickhouse roles/clickhouse-role
+скачиваем роль   
+```
+ansible-galaxy install -r requirements.yml -p ./roles  
+mv roles/clickhouse roles/clickhouse-role  
+```
 
-
+инициализируем пустые роли
+```
 ansible-galaxy role init roles/vector-role
 ansible-galaxy role init roles/lighthouse-role
+```
 
 из папки  ansible-hw4/ansible-hw4/playbook/
 
-командой ansible-playbook -i inventory/prod.yml site.yml
+командой
+```
+ansible-playbook -i inventory/prod.yml site.yml
+```
+
 Начнеться выплнение пайл-план!
-будут установлены 
+будут установлены clickhouse, lighthouse, vector 
+клинет vector будет установлен на две машины lighthouse, vector 
+на машину вектор будет установлен сервер vector
+
+
 
 
 
