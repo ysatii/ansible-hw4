@@ -66,6 +66,12 @@ ansible-playbook -i inventory/prod.yml site.yml
 ```
 
 Начнеться выплнение пайл-план!
+
+![рисунок 1](https://github.com/ysatii/ansible-hw4/blob/main/img/img_1.jpg)
+![рисунок 2](https://github.com/ysatii/ansible-hw4/blob/main/img/img_2.jpg)
+![рисунок 3](https://github.com/ysatii/ansible-hw4/blob/main/img/img_3.jpg)
+![рисунок 4](https://github.com/ysatii/ansible-hw4/blob/main/img/img_4.jpg)
+
 будут установлены clickhouse, lighthouse, vector 
 клинет vector будет установлен на две машины lighthouse, vector 
 на машину вектор будет установлен сервер vector
