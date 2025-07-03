@@ -69,12 +69,17 @@ ansible-playbook -i inventory/prod.yml site.yml
 
 ![рисунок 1](https://github.com/ysatii/ansible-hw4/blob/main/img/img_1.jpg)
 ![рисунок 2](https://github.com/ysatii/ansible-hw4/blob/main/img/img_2.jpg)
+
+смотрим данные по адресу http://84.201.180.24/?user=default#http://84.201.171.156:8123 его даст сам пай-плайн  
 ![рисунок 3](https://github.com/ysatii/ansible-hw4/blob/main/img/img_3.jpg)
+данные продолжают поступапать при обновлениии страниицы 
 ![рисунок 4](https://github.com/ysatii/ansible-hw4/blob/main/img/img_4.jpg)
 
 будут установлены clickhouse, lighthouse, vector 
-клинет vector будет установлен на две машины lighthouse, vector 
-на машину вектор будет установлен сервер vector
+клинет vector будет установлен на две машины  
+- **lighthouse** - получаем данные о запросах к nginx, 
+-  **vector** - получаем данные о работе сервера **vector**
+на машину вектор будет установлен сервер **vector**
 
 
 
