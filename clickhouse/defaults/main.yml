@@ -1,3 +1,0 @@
----
-clickhouse_version: "23.8.2.7"
-download_dir: "/home/{{ ansible_user }}"
